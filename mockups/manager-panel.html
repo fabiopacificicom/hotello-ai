@@ -457,8 +457,20 @@ const enquiriesEN=[
 function renderEnquiries(){
   const list=document.getElementById('enquiryList');
   const data=curLang==='en'?enquiriesEN:enquiriesDE;
-  const agoLbl=curLang==='en'?'ago':'';
-  list.innerHTML=data.map((e,i)=>'<div class="enquiry-item'+(e.unread?' unread':'')+'" id="enq'+i+'" onclick="toggleEnquiry('+i+')"><div class="enquiry-avatar" style="'+(e.color?'background:'+e.color:'')+'">'+e.initials+'</div><div class="enquiry-content"><div class="name">'+e.name+'</div><div class="msg">'+e.msg+'</div></div><div class="enquiry-meta">'+(e.time.includes('Std')||e.time.includes('h ')?e.time:e.time+' '+(e.time.includes('vor')||e.time.includes('yesterday')?'':(curLang==='en'?'':'vor ')+'')+'</div></div><div class="enquiry-reply-bar"><input placeholder="'+(curLang==='en'?'Reply...':'Antworten...')+'"><button onclick="event.stopPropagation();toast(\'✉️ '+(curLang==='en'?'Reply sent!':'Antwort gesendet!')+'\')">'+(curLang==='en'?'Reply':'Senden')+'</button></div>').join('');
+  const isEn=curLang==='en';
+  let html='';
+  data.forEach((e,i)=>{
+    const metaTime=e.time.includes('Std')||e.time.includes('h ')?e.time:e.time+' '+(e.time.includes('vor')||e.time.includes('yesterday')?'':(isEn?'':'vor '));
+    const replyPlaceholder=isEn?'Reply...':'Antworten...';
+    const replyBtn=isEn?'Reply':'Senden';
+    const replyToast=isEn?'Reply sent!':'Antwort gesendet!';
+    html+='<div class="enquiry-item'+(e.unread?' unread':'')+'" id="enq'+i+'" onclick="toggleEnquiry('+i+')">';
+    html+='<div class="enquiry-avatar" style="'+(e.color?'background:'+e.color:'')+'">'+e.initials+'</div>';
+    html+='<div class="enquiry-content"><div class="name">'+e.name+'</div><div class="msg">'+e.msg+'</div></div>';
+    html+='<div class="enquiry-meta">'+metaTime+'</div></div>';
+    html+='<div class="enquiry-reply-bar"><input placeholder="'+replyPlaceholder+'"><button onclick="event.stopPropagation();toast(\'&#9993;&#65039; '+replyToast+'\')">'+replyBtn+'</button></div>';
+  });
+  list.innerHTML=html;
 }
 function toggleEnquiry(i){
   const el=document.getElementById('enq'+i);
@@ -507,7 +519,18 @@ const paymentsEN=[
   {nr:'#1045',guest:'Schmidt Group',amount:'€798',method:'💳 Amex •••1033',date:'—',status:'pending',statusLbl:'Pending',action:'remind'}
 ];
 function renderPayments(){
-  document.getElementById('paymentsBody').innerHTML=(curLang==='en'?paymentsEN:paymentsDE).map(p=>'<tr><td>'+p.nr+'</td><td>'+p.guest+'</td><td><strong>'+p.amount+'</strong></td><td>'+p.method+'</td><td>'+p.date+'</td><td><span class="status '+p.status+'">'+p.statusLbl+'</span></td><td><button class="btn '+(p.action==='remind'?'btn-primary':'btn-outline')+' btn-xs" onclick="event.stopPropagation();'+(p.action==='remind'?'toast(\'🔔 '+(curLang==='en'?'Reminder sent!':'Erinnerung gesendet!')+'\')':'openModal(\'receiptModal\')')+'">'+(p.action==='remind'?(curLang==='en'?'Remind':'Erinnern'):(curLang==='en'?'Receipt':'Quittung'))+'</button></td></tr>').join('');
+  const data=curLang==='en'?paymentsEN:paymentsDE;
+  const isEn=curLang==='en';
+  let html='';
+  data.forEach(p=>{
+    const btnClass=p.action==='remind'?'btn-primary':'btn-outline';
+    const btnLabel=p.action==='remind'?(isEn?'Remind':'Erinnern'):(isEn?'Receipt':'Quittung');
+    const onclick=p.action==='remind'?'toastClick(this)' : 'openModalClick(this)';
+    html+='<tr><td>'+p.nr+'</td><td>'+p.guest+'</td><td><strong>'+p.amount+'</strong></td><td>'+p.method+'</td><td>'+p.date+'</td>';
+    html+='<td><span class="status '+p.status+'">'+p.statusLbl+'</span></td>';
+    html+='<td><button class="btn '+btnClass+' btn-xs" data-action="'+p.action+'" onclick="event.stopPropagation();'+onclick+'">'+btnLabel+'</button></td></tr>';
+  });
+  document.getElementById('paymentsBody').innerHTML=html;
 }
 renderPayments();
 
@@ -544,6 +567,8 @@ function sendAI(){
 function openModal(id){document.getElementById(id).classList.add('show')}
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+function toastClick(el){const a=el.dataset.action;toast(a==='remind'?(curLang==='en'?'🔔 Reminder sent!':'🔔 Erinnerung gesendet!'):'')}
+function openModalClick(el){const a=el.dataset.action;if(a==='receipt')openModal('receiptModal')}
 function toggleSidebar(){const s=document.getElementById('sidebar'),b=document.getElementById('sidebarBackdrop');s.classList.toggle('open');b.classList.toggle('show')}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show')}
 function navTo(section){
