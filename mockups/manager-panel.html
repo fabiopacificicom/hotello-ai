@@ -33,10 +33,10 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* Sidebar */
-  .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+  /* ─── SIDEBAR ─── */
+  .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: transform .3s ease; }
   .sidebar-brand { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.1); }
   .sidebar-brand h2 { font-family: 'Playfair Display', serif; font-size: 1.25rem; }
   .sidebar-brand h2 span { color: var(--gold); }
@@ -47,121 +47,227 @@
   .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--sidebar-hover); color: white; border-left-color: var(--gold); }
   .sidebar-nav a .badge-count { margin-left: auto; background: var(--coral); padding: .1rem .55rem; border-radius: 100px; font-size: .72rem; font-weight: 600; }
   .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,.1); font-size: .82rem; color: rgba(255,255,255,.5); }
+  .sidebar-backdrop { display: none; }
 
-  /* Main */
-  .main { flex: 1; margin-left: 260px; padding: 2rem; }
-  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  /* ─── MAIN ─── */
+  .main { margin-left: 260px; padding: 1.5rem; transition: margin-left .3s ease; }
+
+  /* ─── MOBILE TOPBAR ─── */
+  .mobile-topbar { display: none; background: white; padding: .75rem 1rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 90; align-items: center; gap: .75rem; }
+  .mobile-topbar .hamburger { width: 40px; height: 40px; border-radius: 8px; border: 1.5px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3rem; flex-shrink: 0; }
+  .mobile-topbar .brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ocean); flex: 1; }
+  .mobile-topbar .brand span { color: var(--coral); }
+  .mobile-topbar .quick-btn { width: 40px; height: 40px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--coral); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; }
+
+  /* ─── TOPBAR ─── */
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: .75rem; }
   .topbar h1 { font-family: 'Playfair Display', serif; font-size: 1.75rem; }
-  .topbar-actions { display: flex; gap: 1rem; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: .85rem; cursor: pointer; border: none; transition: all .2s; text-decoration: none; font-family: inherit; }
+  .topbar-actions { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+
+  /* ─── BUTTONS ─── */
+  .btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: .85rem; cursor: pointer; border: none; transition: all .2s; text-decoration: none; font-family: inherit; white-space: nowrap; }
   .btn-primary { background: var(--coral); color: white; }
   .btn-primary:hover { background: #c0734a; }
   .btn-outline { border: 1.5px solid var(--border); background: white; color: var(--text); }
   .btn-outline:hover { border-color: var(--ocean); color: var(--ocean); }
   .btn-sm { padding: .35rem .8rem; font-size: .78rem; }
-  .btn-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: white; cursor: pointer; }
 
-  /* Stats */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-  .stat-card { background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; }
-  .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-  .stat-info h3 { font-size: 1.6rem; font-weight: 700; }
-  .stat-info p { color: var(--muted); font-size: .82rem; margin-top: .1rem; }
-  .stat-trend { font-size: .75rem; font-weight: 600; margin-top: .2rem; }
+  /* ─── STATS ─── */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--card); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; }
+  .stat-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .stat-info h3 { font-size: 1.5rem; font-weight: 700; }
+  .stat-info p { color: var(--muted); font-size: .8rem; margin-top: .1rem; }
+  .stat-trend { font-size: .73rem; font-weight: 600; margin-top: .2rem; }
   .stat-trend.up { color: var(--green); }
   .stat-trend.down { color: var(--red); }
 
-  /* Cards */
+  /* ─── CARDS ─── */
   .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-  .card-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-  .card-header h3 { font-size: 1rem; font-weight: 600; }
-  .card-body { padding: 1.5rem; }
+  .card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
+  .card-header h3 { font-size: .95rem; font-weight: 600; }
+  .card-body { padding: 1.25rem; }
   .card-body.no-pad { padding: 0; }
 
-  /* Layout */
-  .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-  .grid-full { margin-bottom: 1.5rem; }
+  /* ─── LAYOUT ─── */
+  .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .grid-full { margin-bottom: 1.25rem; }
 
-  /* Calendar */
-  .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; font-size: .78rem; color: var(--muted); padding: .75rem 0; border-bottom: 1px solid var(--border); }
+  /* ─── CALENDAR ─── */
+  .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; font-size: .75rem; color: var(--muted); padding: .6rem 0; border-bottom: 1px solid var(--border); }
   .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-  .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: .85rem; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); cursor: pointer; transition: background .15s; position: relative; }
+  .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: .82rem; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); cursor: pointer; transition: background .15s; position: relative; }
   .calendar-day:nth-child(7n) { border-right: none; }
   .calendar-day:hover { background: var(--ocean-light); }
   .calendar-day.other-month { color: #ccc; }
   .calendar-day.today { background: var(--ocean-light); font-weight: 700; color: var(--ocean); }
   .calendar-day.booked { background: var(--coral-light); }
-  .calendar-day.booked::after { content: ''; position: absolute; bottom: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--coral); }
+  .calendar-day.booked::after { content: ''; position: absolute; bottom: 4px; width: 5px; height: 5px; border-radius: 50%; background: var(--coral); }
 
-  /* Booking table */
-  table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; padding: .75rem 1.5rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
-  td { padding: .85rem 1.5rem; font-size: .88rem; border-bottom: 1px solid var(--border); }
+  /* ─── TABLES ─── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  th { text-align: left; padding: .7rem 1.25rem; font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: .8rem 1.25rem; font-size: .85rem; border-bottom: 1px solid var(--border); }
   tr:hover td { background: #f9fafb; }
-  .status { display: inline-block; padding: .25rem .65rem; border-radius: 100px; font-size: .75rem; font-weight: 600; }
+  .status { display: inline-block; padding: .25rem .65rem; border-radius: 100px; font-size: .73rem; font-weight: 600; white-space: nowrap; }
   .status.confirmed { background: var(--green-light); color: #059669; }
   .status.pending { background: var(--gold-light); color: #92400E; }
   .status.in-progress { background: var(--blue-light); color: #2563EB; }
   .status.cancelled { background: var(--red-light); color: #DC2626; }
 
-  /* Enquiries */
-  .enquiry-item { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; cursor: pointer; transition: background .15s; }
+  /* ─── ENQUIRIES ─── */
+  .enquiry-item { padding: .9rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; gap: .85rem; cursor: pointer; transition: background .15s; }
   .enquiry-item:hover { background: #f9fafb; }
   .enquiry-item.unread { border-left: 3px solid var(--coral); background: var(--coral-light); }
-  .enquiry-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--ocean); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .85rem; flex-shrink: 0; }
+  .enquiry-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--ocean); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: .82rem; flex-shrink: 0; }
   .enquiry-content { flex: 1; min-width: 0; }
-  .enquiry-content .name { font-weight: 600; font-size: .88rem; }
-  .enquiry-content .msg { color: var(--muted); font-size: .82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .15rem; }
-  .enquiry-meta { text-align: right; font-size: .75rem; color: var(--muted); flex-shrink: 0; }
+  .enquiry-content .name { font-weight: 600; font-size: .85rem; }
+  .enquiry-content .msg { color: var(--muted); font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: .1rem; }
+  .enquiry-meta { text-align: right; font-size: .73rem; color: var(--muted); flex-shrink: 0; white-space: nowrap; }
 
-  /* AI Panel */
+  /* ─── AI PANEL ─── */
   .ai-panel { background: linear-gradient(135deg, var(--sidebar), #0f2b47); color: white; }
   .ai-panel .card-header { border-color: rgba(255,255,255,.1); color: white; }
-  .ai-chat { padding: 1rem; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: .75rem; }
-  .ai-msg { padding: .65rem .85rem; border-radius: 10px; font-size: .82rem; max-width: 85%; }
+  .ai-chat { padding: 1rem; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: .7rem; }
+  .ai-msg { padding: .6rem .8rem; border-radius: 10px; font-size: .8rem; max-width: 85%; }
   .ai-msg.bot { background: rgba(255,255,255,.12); align-self: flex-start; }
   .ai-msg.user { background: var(--coral); align-self: flex-end; }
-  .ai-input { display: flex; padding: .75rem; gap: .5rem; border-top: 1px solid rgba(255,255,255,.1); }
-  .ai-input input { flex: 1; padding: .55rem .75rem; border-radius: 8px; border: none; background: rgba(255,255,255,.15); color: white; font-family: inherit; font-size: .82rem; outline: none; }
+  .ai-input { display: flex; padding: .7rem; gap: .5rem; border-top: 1px solid rgba(255,255,255,.1); }
+  .ai-input input { flex: 1; padding: .5rem .7rem; border-radius: 8px; border: none; background: rgba(255,255,255,.15); color: white; font-family: inherit; font-size: .8rem; outline: none; min-width: 0; }
   .ai-input input::placeholder { color: rgba(255,255,255,.5); }
-  .ai-input button { padding: .5rem 1rem; border-radius: 8px; border: none; background: var(--gold); color: white; font-weight: 600; cursor: pointer; font-size: .82rem; }
+  .ai-input button { padding: .45rem .9rem; border-radius: 8px; border: none; background: var(--gold); color: white; font-weight: 600; cursor: pointer; font-size: .8rem; white-space: nowrap; }
 
-  /* Quick actions */
-  .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-  .quick-action { background: var(--card); border-radius: var(--radius); padding: 1.25rem; text-align: center; cursor: pointer; box-shadow: var(--shadow); transition: all .2s; border: 1.5px solid transparent; }
+  /* ─── QUICK ACTIONS ─── */
+  .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: .85rem; }
+  .quick-action { background: var(--card); border-radius: var(--radius); padding: 1.2rem; text-align: center; cursor: pointer; box-shadow: var(--shadow); transition: all .2s; border: 1.5px solid transparent; }
   .quick-action:hover { border-color: var(--ocean); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-  .quick-action .icon { font-size: 1.5rem; margin-bottom: .5rem; }
-  .quick-action .label { font-size: .82rem; font-weight: 600; }
+  .quick-action .icon { font-size: 1.4rem; margin-bottom: .4rem; }
+  .quick-action .label { font-size: .8rem; font-weight: 600; }
 
+  /* ─── MOBILE BOTTOM NAV ─── */
+  .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); z-index: 95; padding: .5rem .5rem env(safe-area-inset-bottom, .5rem); }
+  .bottom-nav-inner { display: flex; justify-content: space-around; }
+  .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: .2rem; text-decoration: none; color: var(--muted); font-size: .65rem; font-weight: 500; padding: .4rem .3rem; transition: color .15s; }
+  .bottom-nav a.active { color: var(--coral); }
+  .bottom-nav a .nav-icon { font-size: 1.2rem; }
+
+  /* ───────────────────── RESPONSIVE ───────────────────── */
+
+  /* Tablet: stack 2-col layouts, shrink sidebar */
   @media (max-width: 1024px) {
     .grid-2 { grid-template-columns: 1fr; }
     .quick-actions { grid-template-columns: repeat(2, 1fr); }
+    .sidebar { width: 220px; }
+    .main { margin-left: 220px; }
+    .topbar h1 { font-size: 1.4rem; }
+  }
+
+  /* Phone: collapsible sidebar, mobile topbar, bottom nav */
+  @media (max-width: 768px) {
+    /* Hide desktop sidebar off-screen */
+    .sidebar { transform: translateX(-100%); width: 280px; }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
+    .sidebar-backdrop.show { display: block; }
+
+    /* Show mobile topbar */
+    .mobile-topbar { display: flex; }
+
+    /* Main full-width */
+    .main { margin-left: 0; padding: 1rem; padding-bottom: 5rem; }
+
+    /* Hide desktop topbar elements */
+    .topbar { flex-direction: column; align-items: flex-start; }
+    .topbar h1 { font-size: 1.3rem; }
+    .topbar-actions { width: 100%; }
+    .topbar-actions .btn { flex: 1; justify-content: center; }
+
+    /* Stats: 2-col grid */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+    .stat-card { padding: 1rem; gap: .7rem; }
+    .stat-icon { width: 38px; height: 38px; border-radius: 10px; font-size: 1.1rem; }
+    .stat-info h3 { font-size: 1.25rem; }
+    .stat-info p { font-size: .72rem; }
+
+    /* Calendar: smaller days */
+    .calendar-day { font-size: .72rem; }
+    .calendar-header { font-size: .68rem; }
+
+    /* Tables scrollable */
+    th, td { padding: .6rem .8rem; font-size: .78rem; }
+
+    /* Enquiries: compact */
+    .enquiry-item { padding: .75rem 1rem; }
+    .enquiry-avatar { width: 34px; height: 34px; font-size: .75rem; }
+
+    /* AI chat: smaller */
+    .ai-chat { max-height: 220px; gap: .5rem; }
+    .ai-msg { font-size: .75rem; padding: .5rem .7rem; max-width: 90%; }
+
+    /* Quick actions: 2-col */
+    .quick-actions { grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+    .quick-action { padding: .9rem; }
+    .quick-action .icon { font-size: 1.2rem; }
+    .quick-action .label { font-size: .73rem; }
+
+    /* Card headers: compact */
+    .card-header { padding: .85rem 1rem; }
+    .card-header h3 { font-size: .88rem; }
+    .card-body { padding: 1rem; }
+
+    /* Show bottom nav */
+    .bottom-nav { display: block; }
+
+    /* Buttons: touch-friendly */
+    .btn { padding: .5rem 1rem; font-size: .8rem; }
+    .btn-sm { padding: .35rem .7rem; font-size: .73rem; }
+  }
+
+  /* Small phone */
+  @media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .stat-card { padding: .75rem; flex-direction: column; align-items: flex-start; gap: .4rem; }
+    .stat-icon { width: 34px; height: 34px; font-size: 1rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .calendar-day { font-size: .65rem; }
+    .topbar h1 { font-size: 1.2rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- Mobile Topbar -->
+<div class="mobile-topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+  <div class="brand">Villa <span>Esmeralda</span></div>
+  <button class="quick-btn" aria-label="New booking">+</button>
+</div>
+
+<!-- Sidebar Backdrop -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
 <!-- Sidebar -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <h2>Villa <span>Esmeralda</span></h2>
     <div class="badge">Manager Panel</div>
   </div>
   <nav class="sidebar-nav">
     <div class="section">Hauptmenü</div>
-    <a href="#" class="active">📊 Dashboard</a>
-    <a href="#">📅 Kalender</a>
-    <a href="#">🛏️ Buchungen <span class="badge-count">3</span></a>
-    <a href="#">💬 Anfragen <span class="badge-count">5</span></a>
+    <a href="#" class="active" onclick="closeSidebar()">📊 Dashboard</a>
+    <a href="#" onclick="closeSidebar()">📅 Kalender</a>
+    <a href="#" onclick="closeSidebar()">🛏️ Buchungen <span class="badge-count">3</span></a>
+    <a href="#" onclick="closeSidebar()">💬 Anfragen <span class="badge-count">5</span></a>
     <div class="section">Verwaltung</div>
-    <a href="#">👥 Gästeliste</a>
-    <a href="#">💳 Zahlungen</a>
-    <a href="#">📸 Galerie</a>
-    <a href="#">⚙️ Einstellungen</a>
+    <a href="#" onclick="closeSidebar()">👥 Gästeliste</a>
+    <a href="#" onclick="closeSidebar()">💳 Zahlungen</a>
+    <a href="#" onclick="closeSidebar()">📸 Galerie</a>
+    <a href="#" onclick="closeSidebar()">⚙️ Einstellungen</a>
     <div class="section">KI-Tools</div>
-    <a href="#">🤖 KI-Assistent</a>
-    <a href="#">📈 Analysen</a>
-    <a href="#">✉️ Automatisierung</a>
+    <a href="#" onclick="closeSidebar()">🤖 KI-Assistent</a>
+    <a href="#" onclick="closeSidebar()">📈 Analysen</a>
+    <a href="#" onclick="closeSidebar()">✉️ Automatisierung</a>
   </nav>
   <div class="sidebar-footer">
     <div>👤 Villa Esmeralda Admin</div>
@@ -225,7 +331,7 @@
     <div class="card">
       <div class="card-header">
         <h3>📅 August 2026</h3>
-        <div style="display:flex;gap:.5rem;">
+        <div style="display:flex;gap:.4rem;">
           <button class="btn btn-outline btn-sm">←</button>
           <button class="btn btn-outline btn-sm">Heute</button>
           <button class="btn btn-outline btn-sm">→</button>
@@ -236,44 +342,25 @@
           <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
         </div>
         <div class="calendar-grid">
-          <!-- July days -->
           <span class="calendar-day other-month">27</span>
           <span class="calendar-day other-month">28</span>
           <span class="calendar-day other-month">29</span>
           <span class="calendar-day other-month">30</span>
           <span class="calendar-day other-month">31</span>
-          <!-- August -->
-          <span class="calendar-day">1</span>
-          <span class="calendar-day">2</span>
-          <span class="calendar-day">3</span>
-          <span class="calendar-day">4</span>
-          <span class="calendar-day">5</span>
-          <span class="calendar-day">6</span>
-          <span class="calendar-day">7</span>
-          <span class="calendar-day">8</span>
-          <span class="calendar-day">9</span>
+          <span class="calendar-day">1</span><span class="calendar-day">2</span><span class="calendar-day">3</span>
+          <span class="calendar-day">4</span><span class="calendar-day">5</span><span class="calendar-day">6</span>
+          <span class="calendar-day">7</span><span class="calendar-day">8</span><span class="calendar-day">9</span>
           <span class="calendar-day">10</span>
-          <span class="calendar-day booked">11</span>
-          <span class="calendar-day booked">12</span>
-          <span class="calendar-day booked">13</span>
-          <span class="calendar-day booked">14</span>
-          <span class="calendar-day">15</span>
-          <span class="calendar-day">16</span>
-          <span class="calendar-day">17</span>
-          <span class="calendar-day">18</span>
-          <span class="calendar-day">19</span>
+          <span class="calendar-day booked">11</span><span class="calendar-day booked">12</span>
+          <span class="calendar-day booked">13</span><span class="calendar-day booked">14</span>
+          <span class="calendar-day">15</span><span class="calendar-day">16</span><span class="calendar-day">17</span>
+          <span class="calendar-day">18</span><span class="calendar-day">19</span>
           <span class="calendar-day today">20</span>
-          <span class="calendar-day">21</span>
-          <span class="calendar-day">22</span>
-          <span class="calendar-day">23</span>
-          <span class="calendar-day booked">24</span>
-          <span class="calendar-day booked">25</span>
-          <span class="calendar-day booked">26</span>
-          <span class="calendar-day booked">27</span>
+          <span class="calendar-day">21</span><span class="calendar-day">22</span><span class="calendar-day">23</span>
+          <span class="calendar-day booked">24</span><span class="calendar-day booked">25</span>
+          <span class="calendar-day booked">26</span><span class="calendar-day booked">27</span>
           <span class="calendar-day booked">28</span>
-          <span class="calendar-day">29</span>
-          <span class="calendar-day">30</span>
-          <span class="calendar-day">31</span>
+          <span class="calendar-day">29</span><span class="calendar-day">30</span><span class="calendar-day">31</span>
         </div>
       </div>
     </div>
@@ -282,7 +369,7 @@
     <div class="card">
       <div class="card-header">
         <h3>💬 Neue Anfragen</h3>
-        <button class="btn btn-outline btn-sm">Alle anzeigen →</button>
+        <button class="btn btn-outline btn-sm">Alle →</button>
       </div>
       <div class="card-body no-pad">
         <div class="enquiry-item unread">
@@ -327,63 +414,65 @@
     <div class="card">
       <div class="card-header">
         <h3>🛏️ Aktuelle Buchungen</h3>
-        <button class="btn btn-outline btn-sm">Alle Buchungen →</button>
+        <button class="btn btn-outline btn-sm">Alle →</button>
       </div>
-      <div class="card-body no-pad" style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Gast</th>
-              <th>Zimmer</th>
-              <th>Check-in</th>
-              <th>Check-out</th>
-              <th>Betrag</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Familie Müller</strong></td>
-              <td>Master Suite</td>
-              <td>11. Aug</td>
-              <td>18. Aug</td>
-              <td>€1.260</td>
-              <td><span class="status confirmed">Bestätigt</span></td>
-            </tr>
-            <tr>
-              <td><strong>Elena Lombardi</strong></td>
-              <td>Junior Suite</td>
-              <td>24. Aug</td>
-              <td>28. Aug</td>
-              <td>€520</td>
-              <td><span class="status pending">Ausstehend</span></td>
-            </tr>
-            <tr>
-              <td><strong>John &amp; Sarah</strong></td>
-              <td>Gesamte Villa</td>
-              <td>15. Aug</td>
-              <td>22. Aug</td>
-              <td>€2.660</td>
-              <td><span class="status in-progress">Im Aufenthalt</span></td>
-            </tr>
-            <tr>
-              <td><strong>Herr Weber</strong></td>
-              <td>Master Suite</td>
-              <td>28. Jul</td>
-              <td>4. Aug</td>
-              <td>€1.080</td>
-              <td><span class="status confirmed">Bestätigt</span></td>
-            </tr>
-            <tr>
-              <td><strong>Gruppe Schmidt</strong></td>
-              <td>Gesamte Villa</td>
-              <td>5. Sep</td>
-              <td>12. Sep</td>
-              <td>€2.660</td>
-              <td><span class="status pending">Ausstehend</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="card-body no-pad">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Gast</th>
+                <th>Zimmer</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Betrag</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Familie Müller</strong></td>
+                <td>Master Suite</td>
+                <td>11. Aug</td>
+                <td>18. Aug</td>
+                <td>€1.260</td>
+                <td><span class="status confirmed">Bestätigt</span></td>
+              </tr>
+              <tr>
+                <td><strong>Elena Lombardi</strong></td>
+                <td>Junior Suite</td>
+                <td>24. Aug</td>
+                <td>28. Aug</td>
+                <td>€520</td>
+                <td><span class="status pending">Ausstehend</span></td>
+              </tr>
+              <tr>
+                <td><strong>John &amp; Sarah</strong></td>
+                <td>Gesamte Villa</td>
+                <td>15. Aug</td>
+                <td>22. Aug</td>
+                <td>€2.660</td>
+                <td><span class="status in-progress">Im Aufenthalt</span></td>
+              </tr>
+              <tr>
+                <td><strong>Herr Weber</strong></td>
+                <td>Master Suite</td>
+                <td>28. Jul</td>
+                <td>4. Aug</td>
+                <td>€1.080</td>
+                <td><span class="status confirmed">Bestätigt</span></td>
+              </tr>
+              <tr>
+                <td><strong>Gruppe Schmidt</strong></td>
+                <td>Gesamte Villa</td>
+                <td>5. Sep</td>
+                <td>12. Sep</td>
+                <td>€2.660</td>
+                <td><span class="status pending">Ausstehend</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -394,11 +483,11 @@
         <span style="font-size:.75rem;opacity:.7;">Immer bereit</span>
       </div>
       <div class="ai-chat">
-        <div class="ai-msg bot">Guten Morgen! Hier ist Ihre Übersicht: <strong>3 neue Anfragen</strong>, <strong>2 ausstehende Zahlungen</strong>. Soll ich die Gäste automatisch an den Check-in erinnern?</div>
+        <div class="ai-msg bot">Guten Morgen! <strong>3 neue Anfragen</strong>, <strong>2 ausstehende Zahlungen</strong>. Soll ich die Gäste an den Check-in erinnern?</div>
         <div class="ai-msg user">Ja, erinnere alle.</div>
-        <div class="ai-msg bot">✅ Erledigt! 2 Erinnerungen für Check-ins am 11. und 24. August wurden versendet. Noch etwas?</div>
-        <div class="ai-msg user">Gibt es Verfügbarkeit für die erste Septemberwoche?</div>
-        <div class="ai-msg bot">Die gesamte Villa ist vom <strong>1.-4. September frei</strong> (€1.140). Ab dem 5. ist sie für Gruppe Schmidt reserviert. Soll ich ein Angebot erstellen?</div>
+        <div class="ai-msg bot">✅ Erledigt! 2 Erinnerungen für 11. und 24. August versendet.</div>
+        <div class="ai-msg user">Verfügbarkeit erste Septemberwoche?</div>
+        <div class="ai-msg bot">Gesamte Villa <strong>1.-4. Sep frei</strong> (€1.140). Ab 5. reserviert. Angebot erstellen?</div>
       </div>
       <div class="ai-input">
         <input type="text" placeholder="Fragen Sie den KI-Assistenten...">
@@ -410,22 +499,10 @@
   <!-- Quick Actions -->
   <div class="grid-full">
     <div class="quick-actions">
-      <div class="quick-action">
-        <div class="icon">📅</div>
-        <div class="label">Buchung anlegen</div>
-      </div>
-      <div class="quick-action">
-        <div class="icon">💳</div>
-        <div class="label">Zahlung erfassen</div>
-      </div>
-      <div class="quick-action">
-        <div class="icon">✉️</div>
-        <div class="label">Gast anschreiben</div>
-      </div>
-      <div class="quick-action">
-        <div class="icon">📊</div>
-        <div class="label">Bericht erstellen</div>
-      </div>
+      <div class="quick-action"><div class="icon">📅</div><div class="label">Buchung anlegen</div></div>
+      <div class="quick-action"><div class="icon">💳</div><div class="label">Zahlung erfassen</div></div>
+      <div class="quick-action"><div class="icon">✉️</div><div class="label">Gast anschreiben</div></div>
+      <div class="quick-action"><div class="icon">📊</div><div class="label">Bericht erstellen</div></div>
     </div>
   </div>
 
@@ -434,64 +511,80 @@
     <div class="card">
       <div class="card-header">
         <h3>💳 Zahlungsübersicht — August 2026</h3>
-        <button class="btn btn-outline btn-sm">Alle Zahlungen →</button>
+        <button class="btn btn-outline btn-sm">Alle →</button>
       </div>
-      <div class="card-body no-pad" style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Buchung #</th>
-              <th>Gast</th>
-              <th>Betrag</th>
-              <th>Methode</th>
-              <th>Datum</th>
-              <th>Status</th>
-              <th>Aktion</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1042</td>
-              <td>Familie Müller</td>
-              <td><strong>€1.260</strong></td>
-              <td>💳 Visa •••4242</td>
-              <td>5. Aug</td>
-              <td><span class="status confirmed">Bezahlt</span></td>
-              <td><button class="btn btn-outline btn-sm">Quittung</button></td>
-            </tr>
-            <tr>
-              <td>#1043</td>
-              <td>Elena Lombardi</td>
-              <td><strong>€520</strong></td>
-              <td>🏦 SEPA</td>
-              <td>—</td>
-              <td><span class="status pending">Ausstehend</span></td>
-              <td><button class="btn btn-primary btn-sm">Erinnern</button></td>
-            </tr>
-            <tr>
-              <td>#1044</td>
-              <td>John &amp; Sarah</td>
-              <td><strong>€2.660</strong></td>
-              <td>💳 MC •••8976</td>
-              <td>10. Aug</td>
-              <td><span class="status confirmed">Bezahlt</span></td>
-              <td><button class="btn btn-outline btn-sm">Quittung</button></td>
-            </tr>
-            <tr>
-              <td>#1045</td>
-              <td>Gruppe Schmidt</td>
-              <td><strong>€798</strong> <span style="color:var(--muted);font-size:.78rem;">(Anzahlung)</span></td>
-              <td>💳 Amex •••1033</td>
-              <td>—</td>
-              <td><span class="status pending">Ausstehend</span></td>
-              <td><button class="btn btn-primary btn-sm">Erinnern</button></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="card-body no-pad">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Buchung #</th>
+                <th>Gast</th>
+                <th>Betrag</th>
+                <th>Methode</th>
+                <th>Datum</th>
+                <th>Status</th>
+                <th>Aktion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#1042</td><td>Familie Müller</td><td><strong>€1.260</strong></td>
+                <td>💳 Visa •••4242</td><td>5. Aug</td>
+                <td><span class="status confirmed">Bezahlt</span></td>
+                <td><button class="btn btn-outline btn-sm">Quittung</button></td>
+              </tr>
+              <tr>
+                <td>#1043</td><td>Elena Lombardi</td><td><strong>€520</strong></td>
+                <td>🏦 SEPA</td><td>—</td>
+                <td><span class="status pending">Ausstehend</span></td>
+                <td><button class="btn btn-primary btn-sm">Erinnern</button></td>
+              </tr>
+              <tr>
+                <td>#1044</td><td>John &amp; Sarah</td><td><strong>€2.660</strong></td>
+                <td>💳 MC •••8976</td><td>10. Aug</td>
+                <td><span class="status confirmed">Bezahlt</span></td>
+                <td><button class="btn btn-outline btn-sm">Quittung</button></td>
+              </tr>
+              <tr>
+                <td>#1045</td><td>Gruppe Schmidt</td>
+                <td><strong>€798</strong> <span style="color:var(--muted);font-size:.73rem;">(Anz.)</span></td>
+                <td>💳 Amex •••1033</td><td>—</td>
+                <td><span class="status pending">Ausstehend</span></td>
+                <td><button class="btn btn-primary btn-sm">Erinnern</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </main>
+
+<!-- Bottom Nav (mobile only) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="#" class="active"><span class="nav-icon">📊</span>Dashboard</a>
+    <a href="#"><span class="nav-icon">📅</span>Kalender</a>
+    <a href="#"><span class="nav-icon">🛏️</span>Buchungen</a>
+    <a href="#"><span class="nav-icon">💬</span>Anfragen</a>
+    <a href="#"><span class="nav-icon">⚙️</span>Mehr</a>
+  </div>
+</nav>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const isOpen = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  backdrop.classList.toggle('show', !isOpen);
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('show');
+}
+</script>
 
 </body>
 </html>
