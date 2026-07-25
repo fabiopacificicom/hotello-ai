@@ -364,6 +364,7 @@
 
 <div class="modal-overlay" id="receiptModal"><div class="modal"><div class="modal-header"><h3>🧾 Quittung</h3><button class="modal-close" onclick="closeModal('receiptModal')">✕</button></div><div class="modal-body"><div style="text-align:center;padding:1rem"><p style="font-size:1.5rem;margin-bottom:.5rem">✅</p><p data-i18n="receipt.sent" style="font-weight:600">Quittung wurde an den Gast gesendet</p><p style="color:var(--muted);font-size:.85rem;margin-top:.3rem">Eine PDF-Kopie wurde per E-Mail verschickt.</p></div></div></div></div>
 
+<script src="ai-chat.js"></script>
 <script>
 /* ════════ I18N ════════ */
 const langData={de:{
@@ -552,15 +553,12 @@ const aiResponses={de:[
   {q:['report','analysis','analytics'],a:'August forecast: 15 bookings expected, ~€6,000 revenue. Best week: Aug 18-24 with 5 bookings. Shall I generate the monthly report?'},
   {q:['thanks','great','awesome'],a:'You\'re welcome! 😊 Anything else I can help with?'}
 ]};
-function sendAI(){
+async function sendAI(){
   const input=document.getElementById('aiInput');const text=input.value.trim();if(!text)return;
   const chat=document.getElementById('aiChat');
-  chat.innerHTML+='<div class="ai-msg user">'+text+'</div>';
-  const resp=aiResponses[curLang];let reply='';
-  for(const r of resp){if(r.q.some(k=>text.toLowerCase().includes(k))){reply=r.a;break}}
-  if(!reply)reply=curLang==='en'?'I understand. Let me check that for you... Could you specify — bookings, payments, or guest enquiries?':'Ich verstehe. Lassen Sie mich das prüfen... Geht es um Buchungen, Zahlungen oder Gästeanfragen?';
-  setTimeout(()=>{chat.innerHTML+='<div class="ai-msg bot">'+reply+'</div>';chat.scrollTop=chat.scrollHeight},400+Math.random()*600);
-  input.value='';
+  chat.innerHTML+='<div class="ai-msg user">'+text+'</div>';input.value='';
+  const reply=await AI_CHAT.askAI(text,curLang);
+  chat.innerHTML+='<div class="ai-msg bot">'+reply+'</div>';chat.scrollTop=chat.scrollHeight;
 }
 
 /* ════════ UI HELPERS ════════ */
