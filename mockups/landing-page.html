@@ -154,14 +154,49 @@
   .footer a { color:var(--gold); }
   .footer .nsa { margin-top:.4rem; font-size:.75rem; opacity:.5; }
 
+  /* HAMBURGER */
+  .hamburger { display:none; width:40px; height:40px; border-radius:8px; border:1.5px solid var(--border,#e5e7eb); background:white; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; z-index:110 }
+  .hamburger span { display:block; width:20px; height:2px; background:var(--dark); border-radius:2px; transition:all .3s }
+  .hamburger.open span:nth-child(1){ transform:rotate(45deg) translate(5px,5px) }
+  .hamburger.open span:nth-child(2){ opacity:0 }
+  .hamburger.open span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px) }
+  .mobile-nav { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,.98); backdrop-filter:blur(16px); z-index:105; flex-direction:column; align-items:center; justify-content:center; gap:2rem }
+  .mobile-nav.show { display:flex }
+  .mobile-nav a { font-size:1.3rem; font-weight:600; color:var(--dark); text-decoration:none; transition:color .2s }
+  .mobile-nav a:hover { color:var(--coral) }
+
+  /* LIGHTBOX */
+  .lightbox { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.92); align-items:center; justify-content:center }
+  .lightbox.show { display:flex }
+  .lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px }
+  .lightbox .lb-close { position:absolute; top:1rem; right:1rem; width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.15); color:white; border:none; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center }
+  .lightbox .lb-prev, .lightbox .lb-next { position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.15); color:white; border:none; font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center }
+  .lightbox .lb-prev { left:1rem } .lightbox .lb-next { right:1rem }
+  .lightbox .lb-caption { position:absolute; bottom:2rem; color:white; font-size:.95rem; font-weight:500; text-align:center }
+
+  /* TOAST */
+  .toast-lp { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:var(--deep-ocean); color:white; padding:.75rem 1.5rem; border-radius:100px; font-size:.85rem; font-weight:600; z-index:300; animation:lpToastIn .3s,lpToastOut .3s 2.5s forwards; box-shadow:0 8px 30px rgba(0,0,0,.25); pointer-events:none }
+  @keyframes lpToastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes lpToastOut{from{opacity:1}to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+
+  /* AI CHAT WIDGET */
+  .ai-chat-widget { margin-top:1rem }
+  .ai-chat-widget .chat-input-row { display:flex; gap:.5rem; margin-top:.75rem }
+  .ai-chat-widget .chat-input-row input { flex:1; padding:.55rem .8rem; border-radius:8px; border:none; background:rgba(255,255,255,.15); color:white; font-family:inherit; font-size:.85rem; outline:none }
+  .ai-chat-widget .chat-input-row input::placeholder{ color:rgba(255,255,255,.5) }
+  .ai-chat-widget .chat-input-row button { padding:.5rem 1rem; border-radius:8px; border:none; background:var(--gold); color:white; font-weight:600; cursor:pointer; font-size:.85rem }
+
   /* MOBILE */
   @media(max-width:768px) {
+    .hamburger { display:flex }
     .hero h1 { font-size:2.3rem; }
     .ai-grid { grid-template-columns:1fr; }
     .form-row { grid-template-columns:1fr; }
     .surroundings-grid { grid-template-columns:1fr; }
     .nav-links { display:none; }
+    .nav-right .btn-primary { display:none }
     .rooms-grid { grid-template-columns:1fr; }
+    .lightbox .lb-prev, .lightbox .lb-next { width:40px; height:40px; font-size:1.1rem }
   }
 </style>
 </head>
@@ -184,9 +219,21 @@
         <button class="lang-btn" onclick="setLang('en')">EN</button>
       </div>
       <a href="#booking" class="btn btn-primary" data-i18n="nav.bookNow">Jetzt Buchen</a>
+      <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </nav>
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#gallery" onclick="closeMobileNav()" data-i18n="nav.gallery">Galerie</a>
+  <a href="#rooms" onclick="closeMobileNav()" data-i18n="nav.rooms">Zimmer</a>
+  <a href="#features" onclick="closeMobileNav()" data-i18n="nav.features">Ausstattung</a>
+  <a href="#surroundings" onclick="closeMobileNav()" data-i18n="nav.surroundings">Umgebung</a>
+  <a href="#booking" onclick="closeMobileNav()" data-i18n="nav.booking">Buchen</a>
+  <a href="#booking" class="btn btn-primary" onclick="closeMobileNav()" style="margin-top:1rem" data-i18n="nav.bookNow">Jetzt Buchen</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -336,11 +383,19 @@
         </ul>
       </div>
       <div class="ai-visual">
-        <div class="chat-bubble ai" data-i18n="ai.chat1">Willkommen in der Villa Esmeralda! Wie kann ich Ihnen helfen? 😊</div>
-        <div class="chat-bubble user" data-i18n="ai.chat2">Gibt es gute Restaurants in der Nähe?</div>
-        <div class="chat-bubble ai" data-i18n-html="ai.chat3">Natürlich! Das <strong>La Jaula de Oro</strong> ist 5 Min. zu Fuß entfernt — fantastische kanarische Küche. Soll ich einen Tisch reservieren?</div>
-        <div class="chat-bubble user" data-i18n="ai.chat4">Ja, bitte! Für heute Abend, 2 Personen.</div>
-        <div class="chat-bubble ai" data-i18n="ai.chat5">Erledigt! 🎉 Reservierung für 20:30 Uhr bestätigt. Genießen Sie Ihren Abend!</div>
+        <div id="aiChatMsgs">
+          <div class="chat-bubble ai" data-i18n="ai.chat1">Willkommen in der Villa Esmeralda! Wie kann ich Ihnen helfen? 😊</div>
+          <div class="chat-bubble user" data-i18n="ai.chat2">Gibt es gute Restaurants in der Nähe?</div>
+          <div class="chat-bubble ai" data-i18n-html="ai.chat3">Natürlich! Das <strong>La Jaula de Oro</strong> ist 5 Min. zu Fuß entfernt — fantastische kanarische Küche. Soll ich einen Tisch reservieren?</div>
+          <div class="chat-bubble user" data-i18n="ai.chat4">Ja, bitte! Für heute Abend, 2 Personen.</div>
+          <div class="chat-bubble ai" data-i18n="ai.chat5">Erledigt! 🎉 Reservierung für 20:30 Uhr bestätigt. Genießen Sie Ihren Abend!</div>
+        </div>
+        <div class="ai-chat-widget">
+          <div class="chat-input-row">
+            <input type="text" id="aiLandingInput" placeholder="Fragen Sie den KI-Concierge..." onkeydown="if(event.key==='Enter')sendAILanding()">
+            <button onclick="sendAILanding()" data-i18n="ai.sendBtn">Senden</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -383,11 +438,21 @@
         </div>
       </div>
       <div style="text-align:center;margin-top:1.5rem;">
-        <button class="btn btn-primary" style="font-size:1rem;padding:.85rem 3rem;" data-i18n="booking.check">Verfügbarkeit prüfen →</button>
+        <button id="bookingBtn" class="btn btn-primary" style="font-size:1rem;padding:.85rem 3rem;" onclick="handleBooking(event)" data-i18n="booking.check">Verfügbarkeit prüfen →</button>
       </div>
+      <p id="bookingMsg" style="text-align:center;margin-top:.8rem;font-size:.85rem;color:var(--green);font-weight:600;display:none"></p>
     </div>
   </div>
 </section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-prev" onclick="event.stopPropagation();navigateLightbox(-1)">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-next" onclick="event.stopPropagation();navigateLightbox(1)">›</button>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
 
 <!-- CONTACT -->
 <section class="contact section" id="contact">
@@ -587,10 +652,38 @@ function setLang(lang) {
   localStorage.setItem('villa-esmeralda-lang', lang);
 }
 
+/* ═══════ INTERACTIVE FEATURES ═══════ */
+
+// Mobile nav
+function toggleMobileNav(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobileNav').classList.toggle('show')}
+function closeMobileNav(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileNav').classList.remove('show')}
+
+// Gallery lightbox
+let lbIdx=0;const lbImgs=[];
+function openLightbox(idx){lbIdx=idx;const cards=document.querySelectorAll('.gallery-card img');const captions=document.querySelectorAll('.gallery-overlay span');lbImgs.length=0;cards.forEach((c,i)=>{lbImgs.push({src:c.src,alt:c.alt,caption:captions[i]?captions[i].textContent:''})});updateLightbox();document.getElementById('lightbox').classList.add('show')}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show')}
+function navigateLightbox(dir){lbIdx=(lbIdx+dir+lbImgs.length)%lbImgs.length;updateLightbox()}
+function updateLightbox(){document.getElementById('lbImg').src=lbImgs[lbIdx].src;document.getElementById('lbImg').alt=lbImgs[lbIdx].alt;document.getElementById('lbCaption').textContent=lbImgs[lbIdx].caption}
+
+// Attach lightbox to gallery cards
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.gallery-card').forEach((c,i)=>{c.addEventListener('click',()=>openLightbox(i))})});
+
+// Toast helper
+function lpToast(msg){const t=document.createElement('div');t.className='toast-lp';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+
+// Booking form validation
+function handleBooking(e){e.preventDefault();const checkin=document.querySelector('.booking-card input[type=date]:first-of-type');const checkout=document.querySelector('.booking-card input[type=date]:last-of-type');const msg=document.getElementById('bookingMsg');if(checkin&&checkout&&checkout.value<=checkin.value){msg.style.display='block';msg.style.color='var(--red)';msg.textContent=curLang==='en'?'Check-out must be after check-in':'Check-out muss nach Check-in liegen';return}const room=document.querySelector('.booking-card select:last-of-type');const roomName=room?room.options[room.selectedIndex].text.split(' (')[0]:'';msg.style.display='block';msg.style.color='var(--green)';msg.textContent=curLang==='en'?'✅ Available! '+roomName+' — great choice!':'✅ Verfügbar! '+roomName+' — gute Wahl!';lpToast(curLang==='en'?'🏖️ Availability confirmed!':'🏖️ Verfügbarkeit bestätigt!')}
+
+// AI chat landing
+const aiLandingResponses={de:[{q:['restaurant','essen','küche'],a:'Das La Jaula de Oro ist nur 5 Min. zu Fuß entfernt — fantastische kanarische Küche! 🍽️'},{q:['strand','meer','schwimmen'],a:'Der Strand Costa Calma ist nur 300m entfernt — weißer Sand und türkises Wasser! 🏖️'},{q:['check-in','checkin','ankunft'],a:'Check-in ist ab 15:00 Uhr. Früherer Check-in auf Anfrage möglich. 🕒'},{q:['parken','parkplatz','auto'],a:'Ja, es gibt einen privaten Parkplatz direkt an der Villa — kostenlos! 🚗'},{q:['wifi','internet','wlan'],a:'Kostenloses Highspeed-WLAN in der gesamten Villa verfügbar. 📶'},{q:['preis','kosten','zahlen'],a:'Die Preise variieren je nach Saison. Master Suite ab €180/Nacht, Junior Suite ab €130/Nacht, gesamte Villa ab €380/Nacht. 💰'},{q:['danke','super','toll'],a:'Gerne! 😊 Haben Sie noch weitere Fragen?'}],en:[{q:['restaurant','food','eat','cuisine'],a:'La Jaula de Oro is just a 5-minute walk away — fantastic Canarian cuisine! 🍽️'},{q:['beach','sea','swim','ocean'],a:'Costa Calma beach is just 300m away — white sand and turquoise water! 🏖️'},{q:['check-in','checkin','arrival','arrive'],a:'Check-in is from 3:00 PM. Early check-in available upon request. 🕒'},{q:['parking','car','vehicle'],a:'Yes, there is private parking directly at the villa — free of charge! 🚗'},{q:['wifi','internet'],a:'Free high-speed WiFi available throughout the villa. 📶'},{q:['price','cost','rate','payment'],a:'Prices vary by season. Master Suite from €180/night, Junior Suite from €130/night, entire villa from €380/night. 💰'},{q:['thanks','great','awesome'],a:'You\'re welcome! 😊 Any other questions?'}]};
+function sendAILanding(){const input=document.getElementById('aiLandingInput');const text=input.value.trim();if(!text)return;const msgs=document.getElementById('aiChatMsgs');msgs.innerHTML+='<div class="chat-bubble user">'+text+'</div>';const resp=aiLandingResponses[curLang];let reply='';for(const r of resp){if(r.q.some(k=>text.toLowerCase().includes(k))){reply=r.a;break}}if(!reply)reply=curLang==='en'?'I\'d be happy to help! Feel free to ask about restaurants, the beach, check-in times, or anything else about your stay. 😊':'Ich helfe gerne! Fragen Sie nach Restaurants, dem Strand, Check-in-Zeiten oder allem rund um Ihren Aufenthalt. 😊';setTimeout(()=>{msgs.innerHTML+='<div class="chat-bubble ai">'+reply+'</div>';msgs.scrollTop=msgs.scrollHeight},500+Math.random()*400);input.value=''}
+
 // Init from saved preference or default German
 document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('villa-esmeralda-lang') || 'de';
   setLang(saved);
+  // Add AI send button label
+  document.querySelector('[data-i18n="ai.sendBtn"]').textContent=curLang==='en'?'Send':'Senden';
 });
 </script>
 
