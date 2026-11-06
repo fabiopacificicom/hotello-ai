@@ -1,0 +1,31 @@
+flowchart TD
+  Guest["Guest"] --> Landing["Guest landing page and gallery"]
+  Guest --> GuestServices["Availability, booking and guest profile"]
+  Guest --> GuestAI["Guest AI concierge"]
+  Staff["Hotel staff and managers"] --> Auth["Authentication and authorization"]
+  Auth --> Dashboard["Manager dashboard"]
+  Landing --> GuestServices
+  Dashboard --> Reservations["Reservation and calendar management"]
+  Dashboard --> Rooms["Room management"]
+  Dashboard --> Guests["Guest management"]
+  Dashboard --> Messaging["Enquiries and messaging"]
+  Dashboard --> Payments["Billing and payments"]
+  Dashboard --> Reports["Reporting and analytics"]
+  Dashboard --> StaffMgmt["Staff management"]
+  Dashboard --> ManagerAI["Manager AI assistant"]
+  Dashboard --> Other["Gallery, settings and automation"]
+  GuestServices --> Reservations
+  GuestServices --> Guests
+  Reservations --> Rooms
+  Reservations --> Guests
+  Payments --> Reservations
+  Messaging --> Guests
+  Reports --> Reservations
+  Reports --> Payments
+  GuestServices --> Data[("Application database")]
+  Reservations --> Data
+  Rooms --> Data
+  Guests --> Data
+  Messaging --> Data
+  Payments --> Data
+  StaffMgmt --> Data

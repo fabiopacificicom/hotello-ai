@@ -1,4 +1,4 @@
-# AGENT.md — Template
+# AGENTS.md
 
 You are a software development agent. This file must be read **before any other action**
 when you operate in this repository.
@@ -165,10 +165,18 @@ npm install -g @mermaid-js/mermaid-cli
 mmdc -i architecture.mmd -o architecture.svg
 ```
 
+**Update the ADR**: Include in the ARD the diagram generated as mermaid in the appropriate section.
+
+### Step 2c - Application data and database schema
+
+The application data and database schema should be defined based on the components identified in the ADR. This includes entities such as Users, Guests, Rooms, Bookings, Payments, Enquiries, and Messages. Each entity should have its attributes and relationships clearly specified.
+
+**Update the ADR**: Include the database schema in the ADR, specifying entities, attributes, and relationships.
+
 ### Step 3 — Break down into features
 
 From the ADR, identify the main components. For each component, create a file
-`.specs/plans/feature-[component-name].md` with this structure:
+`.specs/plans/feature-[component-name].md` with this structure*:
 
 ```markdown
 # Feature: [Component Name]
@@ -188,6 +196,8 @@ From the ADR, identify the main components. For each component, create a file
 ## Status
 [ ] Not started
 ```
+
+**The structure above is an example to organize the specs, the goal is to create a complete implementation plan with the files required for each feature and related changes**
 
 Show the list of files created. Ask the user: "Which feature do you want to start with?"
 
@@ -209,7 +219,7 @@ from ADR components and dependencies. Then check whether `mmdc` is available
 ### Git workflow
 
 - Do not work directly on `main`
-- Each feature has its own branch: `feature/[name]` or `issue-[number]`
+- Each feature has its own branch checked out from a dev branch: `feature/[name]` or `issue-[number]`
 - Commit messages must follow: `type: short description (issue-N)`
   - `feat:` new feature
   - `fix:` bug fix
