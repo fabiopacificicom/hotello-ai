@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villa Esmeralda — Costa Calma, Fuerteventura</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --sand: #F5E6D3;
+    --ocean: #1B5C7B;
+    --coral: #D4845A;
+    --deep-ocean: #0D3B4F;
+    --white: #FFFFFF;
+    --warm-white: #FDF8F3;
+    --stone: #6B7280;
+    --dark: #1A1A2E;
+    --gold: #C9A96E;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--warm-white); line-height: 1.6; }
+
+  /* NAV */
+  .nav { position: fixed; top:0; width:100%; z-index:100; background: rgba(255,255,255,.95); backdrop-filter: blur(12px); border-bottom:1px solid rgba(0,0,0,.06); }
+  .nav-inner { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; height:72px; padding:0 1.5rem; }
+  .nav-logo { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--ocean); }
+  .nav-logo span { color:var(--coral); }
+  .nav-right { display:flex; align-items:center; gap:1.5rem; }
+  .nav-links { display:flex; gap:1.5rem; }
+  .nav-links a { text-decoration:none; color:var(--dark); font-weight:500; font-size:.88rem; transition:color .2s; }
+  .nav-links a:hover { color:var(--ocean); }
+
+  /* LANG SWITCHER */
+  .lang-switch { display:flex; border:1.5px solid var(--border,#e5e7eb); border-radius:8px; overflow:hidden; }
+  .lang-btn { padding:.45rem .9rem; font-size:.8rem; font-weight:600; cursor:pointer; border:none; background:white; color:var(--stone); transition:all .2s; font-family:inherit; }
+  .lang-btn.active { background:var(--ocean); color:white; }
+  .lang-btn:not(.active):hover { background:#f0f7fa; }
+  html[lang="en"] .lang-de { display:none; }
+  html[lang="de"] .lang-en { display:none; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.7rem 1.6rem; border-radius:8px; font-weight:600; font-size:.9rem; cursor:pointer; border:none; transition:all .25s; text-decoration:none; font-family:inherit; }
+  .btn-primary { background:var(--coral); color:white; }
+  .btn-primary:hover { background:#c0734a; transform:translateY(-1px); box-shadow:var(--shadow); }
+  .btn-gold { background:linear-gradient(135deg, var(--gold), #b8955f); color:white; }
+  .btn-gold:hover { transform:translateY(-1px); box-shadow:var(--shadow); }
+  .btn-outline-white { border:2px solid white; color:white; background:transparent; }
+  .btn-outline-white:hover { background:white; color:var(--deep-ocean); }
+
+  /* HERO */
+  .hero { position:relative; height:100vh; min-height:650px; display:flex; align-items:center; justify-content:center; text-align:center; color:white; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background: url('img/villa-main.jpg') center/cover no-repeat; }
+  .hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,59,79,.75) 0%, rgba(27,92,123,.5) 50%, rgba(13,59,79,.8) 100%); }
+  .hero-content { position:relative; z-index:1; max-width:850px; padding:2rem; }
+  .hero-badge { display:inline-block; background:rgba(255,255,255,.15); backdrop-filter:blur(8px); padding:.45rem 1.3rem; border-radius:100px; font-size:.85rem; margin-bottom:1.5rem; letter-spacing:.5px; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:4rem; font-weight:700; line-height:1.15; margin-bottom:1.5rem; }
+  .hero h1 span { color:var(--gold); }
+  .hero p { font-size:1.2rem; opacity:.9; margin-bottom:2.5rem; max-width:600px; margin-left:auto; margin-right:auto; }
+  .hero-cta { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+  /* SECTION */
+  .section { padding:5rem 1.5rem; }
+  .section-inner { max-width:1200px; margin:0 auto; }
+  .section-title { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:700; text-align:center; margin-bottom:.8rem; color:var(--deep-ocean); }
+  .section-subtitle { text-align:center; color:var(--stone); font-size:1.05rem; max-width:600px; margin:0 auto 3rem; }
+
+  /* GALLERY */
+  .gallery { background:white; }
+  .gallery-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; }
+  .gallery-card { position:relative; border-radius:var(--radius); overflow:hidden; aspect-ratio:4/3; cursor:pointer; }
+  .gallery-card img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+  .gallery-card:hover img { transform:scale(1.08); }
+  .gallery-overlay { position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.55) 0%, transparent 50%); display:flex; align-items:flex-end; padding:1.5rem; opacity:0; transition:opacity .3s; }
+  .gallery-card:hover .gallery-overlay { opacity:1; }
+  .gallery-overlay span { color:white; font-weight:500; font-size:.95rem; }
+
+  /* ROOMS */
+  .rooms { background:var(--warm-white); }
+  .rooms-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1.5rem; }
+  .room-card { border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); background:white; transition:transform .25s, box-shadow .25s; }
+  .room-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+  .room-img { height:220px; overflow:hidden; }
+  .room-img img { width:100%; height:100%; object-fit:cover; }
+  .room-body { padding:1.5rem; }
+  .room-body h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .room-body .price { color:var(--coral); font-weight:700; font-size:1.1rem; margin-bottom:.5rem; }
+  .room-body .amenities { display:flex; gap:1rem; flex-wrap:wrap; color:var(--stone); font-size:.82rem; }
+  .room-body .amenities span { display:flex; align-items:center; gap:.3rem; }
+
+  /* FEATURES */
+  .feature-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem; }
+  .feature-card { background:white; padding:2rem; border-radius:var(--radius); box-shadow:var(--shadow); text-align:center; transition:transform .25s; }
+  .feature-card:hover { transform:translateY(-3px); }
+  .feature-icon { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.5rem; }
+  .feature-icon.ocean { background:#e8f4f8; color:var(--ocean); }
+  .feature-icon.coral { background:#fdf0e8; color:var(--coral); }
+  .feature-icon.gold { background:#faf3e6; color:var(--gold); }
+  .feature-icon.green { background:#e8f5f0; color:#2d8a7d; }
+  .feature-card h3 { font-size:1.05rem; margin-bottom:.4rem; color:var(--deep-ocean); }
+  .feature-card p { color:var(--stone); font-size:.88rem; }
+
+  /* AI */
+  .ai-highlight { background:linear-gradient(135deg, var(--deep-ocean), #0f2b47); color:white; }
+  .ai-highlight .section-title { color:white; }
+  .ai-highlight .section-subtitle { color:rgba(255,255,255,.7); }
+  .ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+  .ai-text h3 { font-family:'Playfair Display',serif; font-size:1.8rem; margin-bottom:1rem; }
+  .ai-text p { color:rgba(255,255,255,.8); margin-bottom:1.5rem; }
+  .ai-features { list-style:none; }
+  .ai-features li { padding:.6rem 0; color:rgba(255,255,255,.85); display:flex; align-items:center; gap:.6rem; font-size:.92rem; }
+  .ai-features li::before { content:'✦'; color:var(--gold); }
+  .ai-visual { background:rgba(255,255,255,.08); border-radius:16px; padding:2rem; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.1); }
+  .chat-bubble { border-radius:12px; padding:.75rem 1rem; margin-bottom:.7rem; font-size:.88rem; max-width:85%; }
+  .chat-bubble.user { background:var(--coral); margin-left:auto; }
+  .chat-bubble.ai { background:rgba(255,255,255,.12); margin-right:auto; }
+
+  /* BOOKING */
+  .booking { background:linear-gradient(180deg, var(--sand) 0%, #eed9c0 100%); }
+  .booking-card { background:white; border-radius:var(--radius); padding:2.5rem; box-shadow:var(--shadow-lg); max-width:700px; margin:0 auto; }
+  .booking-card h3 { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:1.5rem; text-align:center; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+  .form-group { margin-bottom:1rem; }
+  .form-group label { display:block; font-weight:600; font-size:.82rem; margin-bottom:.3rem; color:var(--dark); text-transform:uppercase; letter-spacing:.5px; }
+  .form-group input,.form-group select { width:100%; padding:.7rem; border:1.5px solid #e5e7eb; border-radius:8px; font-size:.9rem; font-family:inherit; transition:border-color .2s; }
+  .form-group input:focus,.form-group select:focus { border-color:var(--ocean); outline:none; }
+
+  /* SURROUNDINGS */
+  .surroundings { background:white; }
+  .surroundings-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .surround-card { border-radius:var(--radius); overflow:hidden; position:relative; aspect-ratio:3/4; }
+  .surround-card img { width:100%; height:100%; object-fit:cover; transition:transform .4s; }
+  .surround-card:hover img { transform:scale(1.06); }
+  .surround-card .label { position:absolute; bottom:0; left:0; right:0; padding:1.5rem; background:linear-gradient(0deg, rgba(0,0,0,.7), transparent); color:white; }
+  .surround-card .label h4 { font-size:1.1rem; margin-bottom:.2rem; }
+  .surround-card .label p { font-size:.82rem; opacity:.85; }
+
+  /* CONTACT */
+  .contact { background:var(--deep-ocean); color:white; text-align:center; }
+  .contact .section-title { color:white; }
+  .contact .section-subtitle { color:rgba(255,255,255,.7); }
+  .contact-info { display:flex; gap:3rem; justify-content:center; flex-wrap:wrap; margin:2rem 0; }
+  .contact-item { text-align:center; }
+  .contact-item .icon { font-size:1.5rem; margin-bottom:.5rem; }
+  .contact-item p { color:rgba(255,255,255,.8); font-size:.88rem; line-height:1.7; }
+
+  /* FOOTER */
+  .footer { background:var(--dark); color:rgba(255,255,255,.5); padding:2rem; text-align:center; font-size:.82rem; }
+  .footer a { color:var(--gold); }
+  .footer .nsa { margin-top:.4rem; font-size:.75rem; opacity:.5; }
+
+  /* HAMBURGER */
+  .hamburger { display:none; width:40px; height:40px; border-radius:8px; border:1.5px solid var(--border,#e5e7eb); background:white; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; z-index:110 }
+  .hamburger span { display:block; width:20px; height:2px; background:var(--dark); border-radius:2px; transition:all .3s }
+  .hamburger.open span:nth-child(1){ transform:rotate(45deg) translate(5px,5px) }
+  .hamburger.open span:nth-child(2){ opacity:0 }
+  .hamburger.open span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px) }
+  .mobile-nav { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,.98); backdrop-filter:blur(16px); z-index:105; flex-direction:column; align-items:center; justify-content:center; gap:2rem }
+  .mobile-nav.show { display:flex }
+  .mobile-nav a { font-size:1.3rem; font-weight:600; color:var(--dark); text-decoration:none; transition:color .2s }
+  .mobile-nav a:hover { color:var(--coral) }
+
+  /* LIGHTBOX */
+  .lightbox { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.92); align-items:center; justify-content:center }
+  .lightbox.show { display:flex }
+  .lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px }
+  .lightbox .lb-close { position:absolute; top:1rem; right:1rem; width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.15); color:white; border:none; font-size:1.5rem; cursor:pointer; display:flex; align-items:center; justify-content:center }
+  .lightbox .lb-prev, .lightbox .lb-next { position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,.15); color:white; border:none; font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center }
+  .lightbox .lb-prev { left:1rem } .lightbox .lb-next { right:1rem }
+  .lightbox .lb-caption { position:absolute; bottom:2rem; color:white; font-size:.95rem; font-weight:500; text-align:center }
+
+  /* TOAST */
+  .toast-lp { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:var(--deep-ocean); color:white; padding:.75rem 1.5rem; border-radius:100px; font-size:.85rem; font-weight:600; z-index:300; animation:lpToastIn .3s,lpToastOut .3s 2.5s forwards; box-shadow:0 8px 30px rgba(0,0,0,.25); pointer-events:none }
+  @keyframes lpToastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes lpToastOut{from{opacity:1}to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+
+  /* AI CHAT WIDGET */
+  .ai-chat-widget { margin-top:1rem }
+  .ai-chat-widget .chat-input-row { display:flex; gap:.5rem; margin-top:.75rem }
+  .ai-chat-widget .chat-input-row input { flex:1; padding:.55rem .8rem; border-radius:8px; border:none; background:rgba(255,255,255,.15); color:white; font-family:inherit; font-size:.85rem; outline:none }
+  .ai-chat-widget .chat-input-row input::placeholder{ color:rgba(255,255,255,.5) }
+  .ai-chat-widget .chat-input-row button { padding:.5rem 1rem; border-radius:8px; border:none; background:var(--gold); color:white; font-weight:600; cursor:pointer; font-size:.85rem }
+
+  /* MOBILE */
+  @media(max-width:768px) {
+    .hamburger { display:flex }
+    .hero h1 { font-size:2.3rem; }
+    .ai-grid { grid-template-columns:1fr; }
+    .form-row { grid-template-columns:1fr; }
+    .surroundings-grid { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+    .nav-right .btn-primary { display:none }
+    .rooms-grid { grid-template-columns:1fr; }
+    .lightbox .lb-prev, .lightbox .lb-next { width:40px; height:40px; font-size:1.1rem }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">Villa <span>Esmeralda</span></div>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#gallery"><span data-i18n="nav.gallery">Galerie</span></a>
+        <a href="#rooms"><span data-i18n="nav.rooms">Zimmer</span></a>
+        <a href="#features"><span data-i18n="nav.features">Ausstattung</span></a>
+        <a href="#surroundings"><span data-i18n="nav.surroundings">Umgebung</span></a>
+        <a href="#booking"><span data-i18n="nav.booking">Buchen</span></a>
+        <a href="{{ route('login') }}">Manager Login</a>
+      </div>
+      <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+      <a href="#booking" class="btn btn-primary" data-i18n="nav.bookNow">Jetzt Buchen</a>
+      <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#gallery" onclick="closeMobileNav()" data-i18n="nav.gallery">Galerie</a>
+  <a href="#rooms" onclick="closeMobileNav()" data-i18n="nav.rooms">Zimmer</a>
+  <a href="#features" onclick="closeMobileNav()" data-i18n="nav.features">Ausstattung</a>
+  <a href="#surroundings" onclick="closeMobileNav()" data-i18n="nav.surroundings">Umgebung</a>
+  <a href="#booking" onclick="closeMobileNav()" data-i18n="nav.booking">Buchen</a>
+  <a href="{{ route('login') }}">Manager Login</a>
+  <a href="#booking" class="btn btn-primary" onclick="closeMobileNav()" style="margin-top:1rem" data-i18n="nav.bookNow">Jetzt Buchen</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="hero.badge">✦ Costa Calma · Fuerteventura</div>
+    <h1 data-i18n-html="hero.title">Ihr Paradies am <span>Meer</span></h1>
+    <p data-i18n="hero.sub">Entdecken Sie die perfekte Mischung aus Luxus und Entspannung in unserer exklusiven Villa mit direktem Meerblick auf die Kanaren.</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn btn-gold" style="font-size:1rem;padding:.85rem 2rem;" data-i18n="hero.check">Verfügbarkeit prüfen</a>
+      <a href="#gallery" class="btn btn-outline-white" style="font-size:1rem;padding:.85rem 2rem;" data-i18n="hero.gallery">Galerie ansehen</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery section" id="gallery">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="gallery.title">Unsere Galerie</h2>
+    <p class="section-subtitle" data-i18n="gallery.sub">Tauchen Sie ein in die Schönheit der Villa Esmeralda — jedes Bild erzählt eine Geschichte von Komfort und Eleganz.</p>
+    <div class="gallery-grid">
+      <div class="gallery-card"><img src="img/villa-pool.jpg" alt="Pool & Terrace" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.pool">Pool mit Meerblick</span></div></div>
+      <div class="gallery-card"><img src="img/villa-bedroom.jpg" alt="Bedroom" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.bedroom">Luxuriöse Suiten</span></div></div>
+      <div class="gallery-card"><img src="img/villa-terrace.jpg" alt="Terrace" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.sunset">Terrasse mit Ausblick</span></div></div>
+      <div class="gallery-card"><img src="img/villa-living.jpg" alt="Living area" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.living">Offener Wohnbereich</span></div></div>
+      <div class="gallery-card"><img src="img/villa-outdoor.jpg" alt="Exterior" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.exterior">Außenbereich &amp; Garten</span></div></div>
+      <div class="gallery-card"><img src="img/villa-garden.jpg" alt="Garden" loading="lazy"><div class="gallery-overlay"><span data-i18n="gallery.poolarea">Garten &amp; Entspannung</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="rooms section" id="rooms">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="rooms.title">Unsere Unterkünfte</h2>
+    <p class="section-subtitle" data-i18n="rooms.sub">Jedes Zimmer wurde mit Liebe zum Detail gestaltet — für unvergessliche Nächte unter der kanarischen Sonne.</p>
+    <div class="rooms-grid">
+      <div class="room-card">
+        <div class="room-img"><img src="img/villa-bedroom.jpg" alt="Master Suite" loading="lazy"></div>
+        <div class="room-body">
+          <h3 data-i18n="rooms.master">Master Suite mit Meerblick</h3>
+          <div class="price">€180 <span style="font-weight:400;font-size:.85rem;color:var(--stone);" data-i18n="rooms.perNight">/ Nacht</span></div>
+          <div class="amenities">
+            <span>🛏️ King-Bett</span><span>🌊 Meerblick</span><span>🛁 En-Suite Bad</span>
+          </div>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img"><img src="img/villa-living.jpg" alt="Junior Suite" loading="lazy"></div>
+        <div class="room-body">
+          <h3 data-i18n="rooms.junior">Junior Suite — Gartenblick</h3>
+          <div class="price">€130 <span style="font-weight:400;font-size:.85rem;color:var(--stone);" data-i18n="rooms.perNight">/ Nacht</span></div>
+          <div class="amenities">
+            <span>🛏️ Queen-Bett</span><span>🌴 Terrasse</span><span>🚿 Dusche</span>
+          </div>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img"><img src="img/villa-pool.jpg" alt="Entire Villa" loading="lazy"></div>
+        <div class="room-body">
+          <h3 data-i18n="rooms.villa">Gesamte Villa — Exklusiv</h3>
+          <div class="price">€380 <span style="font-weight:400;font-size:.85rem;color:var(--stone);" data-i18n="rooms.perNight">/ Nacht</span></div>
+          <div class="amenities">
+            <span>🛏️ 3 Schlafzimmer</span><span>🏊 Privat-Pool</span><span>👨‍👩‍👧‍👦 Bis 6 Pers.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features section" id="features">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="features.title">Warum Villa Esmeralda?</h2>
+    <p class="section-subtitle" data-i18n="features.sub">Mehr als nur eine Unterkunft — ein Erlebnis, das Sie nicht vergessen werden.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon ocean">🏖️</div>
+        <h3 data-i18n="features.location">Traumlage</h3>
+        <p data-i18n="features.locationDesc">Nur 300m vom weißen Sandstrand Costa Calma entfernt. Perfekt für Sonnenanbeter und Wassersportler.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon coral">🏊</div>
+        <h3 data-i18n="features.pool">Privater Pool</h3>
+        <p data-i18n="features.poolDesc">Exklusiver Infinity-Pool mit atemberaubendem Meerblick — Ihr privates Paradies.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon gold">🤖</div>
+        <h3 data-i18n="features.ai">KI-Concierge 24/7</h3>
+        <p data-i18n="features.aiDesc">Unser intelligenter Assistent beantwortet alle Fragen — von Restaurant-Empfehlungen bis Check-in.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">💳</div>
+        <h3 data-i18n="features.payment">Sichere Buchung</h3>
+        <p data-i18n="features.paymentDesc">Zahlen Sie bequem und sicher per Kreditkarte oder SEPA — Ihre Daten sind jederzeit geschützt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SURROUNDINGS -->
+<section class="surroundings section" id="surroundings">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="surroundings.title">Die Umgebung</h2>
+    <p class="section-subtitle" data-i18n="surroundings.sub">Costa Calma und Fuerteventura bieten unvergessliche Erlebnisse — von endlosen Stränden bis zur einzigartigen Vulkanlandschaft.</p>
+    <div class="surroundings-grid">
+      <div class="surround-card">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&q=80" alt="Costa Calma Beach" loading="lazy">
+        <div class="label">
+          <h4 data-i18n="surroundings.beach">Strand Costa Calma</h4>
+          <p data-i18n="surroundings.beachDesc">Weißer Sand, türkises Wasser — nur 300m entfernt</p>
+        </div>
+      </div>
+      <div class="surround-card">
+        <img src="https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=500&q=80" alt="Dunes" loading="lazy">
+        <div class="label">
+          <h4 data-i18n="surroundings.dunes">Dünen von Corralejo</h4>
+          <p data-i18n="surroundings.dunesDesc">Atemberaubende Sanddünen — ein Naturwunder</p>
+        </div>
+      </div>
+      <div class="surround-card">
+        <img src="https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=500&q=80" alt="Local town" loading="lazy">
+        <div class="label">
+          <h4 data-i18n="surroundings.town">Lokale Gastronomie</h4>
+          <p data-i18n="surroundings.townDesc">Authentische kanarische Küche in Costa Calma</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI CONCIERGE -->
+<section class="ai-highlight section">
+  <div class="section-inner">
+    <div class="ai-grid">
+      <div class="ai-text">
+        <h3 data-i18n="ai.title">Ihr persönlicher KI-Concierge</h3>
+        <p>Demo: Beispielgespräch, kein verbundener KI-Dienst. / Example conversation; AI is not connected.</p>
+        <p data-i18n="ai.sub">Stellen Sie Fragen auf Deutsch oder Englisch — unser intelligenter Assistent hilft Ihnen rund um die Uhr.</p>
+        <ul class="ai-features">
+          <li data-i18n="ai.li1">Restaurant-Empfehlungen in Costa Calma</li>
+          <li data-i18n="ai.li2">Check-in &amp; Check-out Informationen</li>
+          <li data-i18n="ai.li3">Aktivitäten und Ausflüge auf Fuerteventura</li>
+          <li data-i18n="ai.li4">Hausregeln und Ausstattung</li>
+          <li data-i18n="ai.li5">Soforthilfe bei Fragen — Tag und Nacht</li>
+        </ul>
+      </div>
+      <div class="ai-visual">
+        <div id="aiChatMsgs">
+          <div class="chat-bubble ai" data-i18n="ai.chat1">Willkommen in der Villa Esmeralda! Wie kann ich Ihnen helfen? 😊</div>
+          <div class="chat-bubble user" data-i18n="ai.chat2">Gibt es gute Restaurants in der Nähe?</div>
+          <div class="chat-bubble ai" data-i18n-html="ai.chat3">Natürlich! Das <strong>La Jaula de Oro</strong> ist 5 Min. zu Fuß entfernt — fantastische kanarische Küche. Soll ich einen Tisch reservieren?</div>
+          <div class="chat-bubble user" data-i18n="ai.chat4">Ja, bitte! Für heute Abend, 2 Personen.</div>
+          <div class="chat-bubble ai" data-i18n="ai.chat5">Erledigt! 🎉 Reservierung für 20:30 Uhr bestätigt. Genießen Sie Ihren Abend!</div>
+        </div>
+        <div class="ai-chat-widget">
+          <div class="chat-input-row">
+            <input type="text" id="aiLandingInput" placeholder="Fragen Sie den KI-Concierge..." onkeydown="if(event.key==='Enter')sendAILanding()">
+            <button onclick="sendAILanding()" data-i18n="ai.sendBtn">Senden</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking section" id="booking">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="booking.title">Verfügbarkeit &amp; Buchung</h2>
+    <p class="section-subtitle" data-i18n="booking.sub">Prüfen Sie die Verfügbarkeit und buchen Sie Ihren Traumurlaub in wenigen Klicks.</p>
+    <div class="booking-card">
+      <h3 data-i18n="booking.cardTitle">🏖️ Aufenthalt planen</h3>
+      <p>Demo: Keine echten Buchungen oder Verfügbarkeitsprüfungen. / No real bookings or availability checks.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="booking.checkin">Check-in</label>
+          <input type="date" value="2026-08-01">
+        </div>
+        <div class="form-group">
+          <label data-i18n="booking.checkout">Check-out</label>
+          <input type="date" value="2026-08-07">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="booking.guests">Gäste</label>
+          <select>
+            <option data-i18n="booking.guests2">2 Erwachsene</option>
+            <option>1 Erwachsener</option>
+            <option>3 Erwachsene</option>
+            <option>4 Erwachsene</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="booking.room">Zimmertyp</label>
+          <select>
+            <option>Master Suite (€180/Nacht)</option>
+            <option>Junior Suite (€130/Nacht)</option>
+            <option>Gesamte Villa (€380/Nacht)</option>
+          </select>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button id="bookingBtn" class="btn btn-primary" style="font-size:1rem;padding:.85rem 3rem;" onclick="handleBooking(event)" data-i18n="booking.check">Verfügbarkeit prüfen →</button>
+      </div>
+      <p id="bookingMsg" style="text-align:center;margin-top:.8rem;font-size:.85rem;color:var(--green);font-weight:600;display:none"></p>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-prev" onclick="event.stopPropagation();navigateLightbox(-1)">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-next" onclick="event.stopPropagation();navigateLightbox(1)">›</button>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact section" id="contact">
+  <div class="section-inner">
+    <h2 class="section-title" data-i18n="contact.title">Kontakt</h2>
+    <p class="section-subtitle" data-i18n="contact.sub">Wir freuen uns auf Ihre Nachricht — egal ob Buchungsanfrage oder Frage.</p>
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="icon">📍</div>
+        <p>Calle la Dorada 12<br>Costa Calma, 35627<br>Fuerteventura, Spanien</p>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📞</div>
+        <p>+34 928 123 456<br>info@villa-esmeralda.es</p>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🤖</div>
+        <p data-i18n="contact.ai">KI-Concierge 24/7<br>Chatten Sie mit uns —<br>jederzeit &amp; in Ihrer Sprache</p>
+      </div>
+    </div>
+    <a href="#booking" class="btn btn-gold" data-i18n="contact.book">Jetzt Buchen</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 Villa Esmeralda · Costa Calma, Fuerteventura</p>
+  <p class="nsa">Powered by NSA Agency — KI-gestütztes Hotelmanagement</p>
+</footer>
+
+<!-- I18N ENGINE -->
+<script>
+const i18n = {
+  de: {
+    'nav.gallery': 'Galerie',
+    'nav.rooms': 'Zimmer',
+    'nav.features': 'Ausstattung',
+    'nav.surroundings': 'Umgebung',
+    'nav.booking': 'Buchen',
+    'nav.bookNow': 'Jetzt Buchen',
+    'hero.badge': '✦ Costa Calma · Fuerteventura',
+    'hero.title': 'Ihr Paradies am <span>Meer</span>',
+    'hero.sub': 'Entdecken Sie die perfekte Mischung aus Luxus und Entspannung in unserer exklusiven Villa mit direktem Meerblick auf die Kanaren.',
+    'hero.check': 'Verfügbarkeit prüfen',
+    'hero.gallery': 'Galerie ansehen',
+    'gallery.title': 'Unsere Galerie',
+    'gallery.sub': 'Tauchen Sie ein in die Schönheit der Villa Esmeralda — jedes Bild erzählt eine Geschichte von Komfort und Eleganz.',
+    'gallery.pool': 'Infinity-Pool mit Meerblick',
+    'gallery.bedroom': 'Luxuriöse Suiten',
+    'gallery.sunset': 'Atemberaubende Sonnenuntergänge',
+    'gallery.living': 'Offener Wohnbereich',
+    'gallery.exterior': 'Außenbereich & Garten',
+    'gallery.poolarea': 'Pool & Lounge-Bereich',
+    'rooms.title': 'Unsere Unterkünfte',
+    'rooms.sub': 'Jedes Zimmer wurde mit Liebe zum Detail gestaltet — für unvergessliche Nächte unter der kanarischen Sonne.',
+    'rooms.master': 'Master Suite mit Meerblick',
+    'rooms.junior': 'Junior Suite — Gartenblick',
+    'rooms.villa': 'Gesamte Villa — Exklusiv',
+    'rooms.perNight': '/ Nacht',
+    'features.title': 'Warum Villa Esmeralda?',
+    'features.sub': 'Mehr als nur eine Unterkunft — ein Erlebnis, das Sie nicht vergessen werden.',
+    'features.location': 'Traumlage',
+    'features.locationDesc': 'Nur 300m vom weißen Sandstrand Costa Calma entfernt. Perfekt für Sonnenanbeter und Wassersportler.',
+    'features.pool': 'Privater Pool',
+    'features.poolDesc': 'Exklusiver Infinity-Pool mit atemberaubendem Meerblick — Ihr privates Paradies.',
+    'features.ai': 'KI-Concierge 24/7',
+    'features.aiDesc': 'Unser intelligenter Assistent beantwortet alle Fragen — von Restaurant-Empfehlungen bis Check-in.',
+    'features.payment': 'Sichere Buchung',
+    'features.paymentDesc': 'Zahlen Sie bequem und sicher per Kreditkarte oder SEPA — Ihre Daten sind jederzeit geschützt.',
+    'surroundings.title': 'Die Umgebung',
+    'surroundings.sub': 'Costa Calma und Fuerteventura bieten unvergessliche Erlebnisse — von endlosen Stränden bis zur einzigartigen Vulkanlandschaft.',
+    'surroundings.beach': 'Strand Costa Calma',
+    'surroundings.beachDesc': 'Weißer Sand, türkises Wasser — nur 300m entfernt',
+    'surroundings.dunes': 'Dünen von Corralejo',
+    'surroundings.dunesDesc': 'Atemberaubende Sanddünen — ein Naturwunder',
+    'surroundings.town': 'Lokale Gastronomie',
+    'surroundings.townDesc': 'Authentische kanarische Küche in Costa Calma',
+    'ai.title': 'Ihr persönlicher KI-Concierge',
+    'ai.sub': 'Stellen Sie Fragen auf Deutsch oder Englisch — unser intelligenter Assistent hilft Ihnen rund um die Uhr.',
+    'ai.li1': 'Restaurant-Empfehlungen in Costa Calma',
+    'ai.li2': 'Check-in & Check-out Informationen',
+    'ai.li3': 'Aktivitäten und Ausflüge auf Fuerteventura',
+    'ai.li4': 'Hausregeln und Ausstattung',
+    'ai.li5': 'Soforthilfe bei Fragen — Tag und Nacht',
+    'ai.chat1': 'Willkommen in der Villa Esmeralda! Wie kann ich Ihnen helfen? 😊',
+    'ai.chat2': 'Gibt es gute Restaurants in der Nähe?',
+    'ai.chat3': 'Natürlich! Das <strong>La Jaula de Oro</strong> ist 5 Min. zu Fuß entfernt — fantastische kanarische Küche. Soll ich einen Tisch reservieren?',
+    'ai.chat4': 'Ja, bitte! Für heute Abend, 2 Personen.',
+    'ai.chat5': 'Erledigt! 🎉 Reservierung für 20:30 Uhr bestätigt. Genießen Sie Ihren Abend!',
+    'booking.title': 'Verfügbarkeit & Buchung',
+    'booking.sub': 'Prüfen Sie die Verfügbarkeit und buchen Sie Ihren Traumurlaub in wenigen Klicks.',
+    'booking.cardTitle': '🏖️ Aufenthalt planen',
+    'booking.checkin': 'Check-in',
+    'booking.checkout': 'Check-out',
+    'booking.guests': 'Gäste',
+    'booking.guests2': '2 Erwachsene',
+    'booking.room': 'Zimmertyp',
+    'booking.check': 'Verfügbarkeit prüfen →',
+    'contact.title': 'Kontakt',
+    'contact.sub': 'Wir freuen uns auf Ihre Nachricht — egal ob Buchungsanfrage oder Frage.',
+    'contact.ai': 'KI-Concierge 24/7<br>Chatten Sie mit uns —<br>jederzeit & in Ihrer Sprache',
+    'contact.book': 'Jetzt Buchen',
+  },
+  en: {
+    'nav.gallery': 'Gallery',
+    'nav.rooms': 'Rooms',
+    'nav.features': 'Features',
+    'nav.surroundings': 'Surroundings',
+    'nav.booking': 'Book',
+    'nav.bookNow': 'Book Now',
+    'hero.badge': '✦ Costa Calma · Fuerteventura',
+    'hero.title': 'Your Paradise by the <span>Sea</span>',
+    'hero.sub': 'Discover the perfect blend of luxury and relaxation at our exclusive villa with stunning ocean views on the Canary Islands.',
+    'hero.check': 'Check Availability',
+    'hero.gallery': 'View Gallery',
+    'gallery.title': 'Our Gallery',
+    'gallery.sub': 'Immerse yourself in the beauty of Villa Esmeralda — every image tells a story of comfort and elegance.',
+    'gallery.pool': 'Infinity Pool with Ocean View',
+    'gallery.bedroom': 'Luxurious Suites',
+    'gallery.sunset': 'Breathtaking Sunsets',
+    'gallery.living': 'Open-Plan Living Area',
+    'gallery.exterior': 'Outdoor & Garden Area',
+    'gallery.poolarea': 'Pool & Lounge Area',
+    'rooms.title': 'Our Accommodations',
+    'rooms.sub': 'Each room has been designed with attention to detail — for unforgettable nights under the Canarian sun.',
+    'rooms.master': 'Master Suite with Ocean View',
+    'rooms.junior': 'Junior Suite — Garden View',
+    'rooms.villa': 'Entire Villa — Exclusive',
+    'rooms.perNight': '/ night',
+    'features.title': 'Why Villa Esmeralda?',
+    'features.sub': 'More than just accommodation — an experience you won\'t forget.',
+    'features.location': 'Dream Location',
+    'features.locationDesc': 'Just 300m from the white sandy beach of Costa Calma. Perfect for sun lovers and water sports enthusiasts.',
+    'features.pool': 'Private Pool',
+    'features.poolDesc': 'Exclusive infinity pool with breathtaking ocean views — your private paradise.',
+    'features.ai': 'AI Concierge 24/7',
+    'features.aiDesc': 'Our intelligent assistant answers all your questions — from restaurant recommendations to check-in details.',
+    'features.payment': 'Secure Booking',
+    'features.paymentDesc': 'Pay conveniently and securely by credit card or SEPA — your data is always protected.',
+    'surroundings.title': 'The Surroundings',
+    'surroundings.sub': 'Costa Calma and Fuerteventura offer unforgettable experiences — from endless beaches to unique volcanic landscapes.',
+    'surroundings.beach': 'Costa Calma Beach',
+    'surroundings.beachDesc': 'White sand, turquoise water — just 300m away',
+    'surroundings.dunes': 'Corralejo Dunes',
+    'surroundings.dunesDesc': 'Breathtaking sand dunes — a natural wonder',
+    'surroundings.town': 'Local Gastronomy',
+    'surroundings.townDesc': 'Authentic Canarian cuisine in Costa Calma',
+    'ai.title': 'Your Personal AI Concierge',
+    'ai.sub': 'Ask questions in English or German — our intelligent assistant is here 24/7.',
+    'ai.li1': 'Restaurant recommendations in Costa Calma',
+    'ai.li2': 'Check-in & check-out information',
+    'ai.li3': 'Activities & excursions in Fuerteventura',
+    'ai.li4': 'House rules & amenities',
+    'ai.li5': 'Immediate help with questions — day & night',
+    'ai.chat1': 'Welcome to Villa Esmeralda! How can I help you? 😊',
+    'ai.chat2': 'Are there good restaurants nearby?',
+    'ai.chat3': 'Of course! <strong>La Jaula de Oro</strong> is a 5-minute walk away — fantastic Canarian cuisine. Shall I make a reservation?',
+    'ai.chat4': 'Yes, please! For tonight, 2 people.',
+    'ai.chat5': 'Done! 🎉 Reservation confirmed for 8:30 PM. Enjoy your evening!',
+    'booking.title': 'Availability & Booking',
+    'booking.sub': 'Check availability and book your dream holiday in just a few clicks.',
+    'booking.cardTitle': '🏖️ Plan Your Stay',
+    'booking.checkin': 'Check-in',
+    'booking.checkout': 'Check-out',
+    'booking.guests': 'Guests',
+    'booking.guests2': '2 Adults',
+    'booking.room': 'Room Type',
+    'booking.check': 'Check Availability →',
+    'contact.title': 'Contact',
+    'contact.sub': 'We look forward to hearing from you — whether a booking request or a question.',
+    'contact.ai': 'AI Concierge 24/7<br>Chat with us —<br>anytime & in your language',
+    'contact.book': 'Book Now',
+  }
+};
+
+let curLang = 'de';
+function setLang(lang) {
+  curLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang.toLowerCase()));
+  const dict = i18n[lang];
+  // Update all [data-i18n] elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (dict[key]) {
+      if (el.hasAttribute('data-i18n-html')) {
+        el.innerHTML = dict[key];
+      } else {
+        el.textContent = dict[key];
+      }
+    }
+  });
+  // Update page title
+  document.title = lang === 'en' ? 'Villa Esmeralda — Costa Calma, Fuerteventura' : 'Villa Esmeralda — Costa Calma, Fuerteventura';
+  // Also update data-i18n-html elements
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if (dict[key]) el.innerHTML = dict[key];
+  });
+  localStorage.setItem('villa-esmeralda-lang', lang);
+}
+
+/* ═══════ INTERACTIVE FEATURES ═══════ */
+
+// Mobile nav
+function toggleMobileNav(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobileNav').classList.toggle('show')}
+function closeMobileNav(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileNav').classList.remove('show')}
+
+// Gallery lightbox
+let lbIdx=0;const lbImgs=[];
+function openLightbox(idx){lbIdx=idx;const cards=document.querySelectorAll('.gallery-card img');const captions=document.querySelectorAll('.gallery-overlay span');lbImgs.length=0;cards.forEach((c,i)=>{lbImgs.push({src:c.src,alt:c.alt,caption:captions[i]?captions[i].textContent:''})});updateLightbox();document.getElementById('lightbox').classList.add('show')}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show')}
+function navigateLightbox(dir){lbIdx=(lbIdx+dir+lbImgs.length)%lbImgs.length;updateLightbox()}
+function updateLightbox(){document.getElementById('lbImg').src=lbImgs[lbIdx].src;document.getElementById('lbImg').alt=lbImgs[lbIdx].alt;document.getElementById('lbCaption').textContent=lbImgs[lbIdx].caption}
+
+// Attach lightbox to gallery cards
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.gallery-card').forEach((c,i)=>{c.addEventListener('click',()=>openLightbox(i))})});
+
+// Toast helper
+function lpToast(msg){const t=document.createElement('div');t.className='toast-lp';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+
+// Booking form validation
+function handleBooking(e){e.preventDefault();const dates=document.querySelectorAll('.booking-card input[type=date]');const msg=document.getElementById('bookingMsg');msg.style.display='block';if(!dates[0].value||!dates[1].value||dates[1].value<=dates[0].value){msg.style.color='var(--red)';msg.textContent=curLang==='en'?'Enter valid dates; check-out must be after check-in.':'Bitte gültige Daten eingeben; Check-out muss nach Check-in liegen.';return}msg.style.color='var(--deep-ocean)';msg.textContent=curLang==='en'?'Demo only: availability is not checked.':'Nur Demo: Die Verfügbarkeit wird nicht geprüft.'}
+
+function sendAILanding(){const input=document.getElementById('aiLandingInput');if(!input.value.trim())return;input.value='';lpToast(curLang==='en'?'Demo only: AI chat is not connected.':'Nur Demo: Der KI-Chat ist nicht verbunden.')}
+
+// Init from saved preference or default German
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('villa-esmeralda-lang') || 'de';
+  setLang(saved);
+  // Add AI send button label
+  document.querySelector('[data-i18n="ai.sendBtn"]').textContent=curLang==='en'?'Send':'Senden';
+});
+</script>
+
+</body>
+</html>
