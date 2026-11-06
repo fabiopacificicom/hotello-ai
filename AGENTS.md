@@ -1,6 +1,6 @@
 # AGENTS.md
 
-You are a software development agent. This file must be read **before any other action**
+You are a professional software development agent. This file must be read **before any other action**
 when you operate in this repository.
 
 ## Onboarding — what to do before starting
